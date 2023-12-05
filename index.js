@@ -58,4 +58,56 @@ subMenuEl.classList.add('flex-around');
 subMenuEl.style.position = 'absolute';
 //Set the CSS top property of subMenuEl to the value of 0.
 subMenuEl.style.top = '0';
+//Part 4: Adding Menu Interaction
+//Select and cache the all of the <a> elements inside of topMenuEl in a variable named topMenuLinks.
+const topMenuLinks = topMenuEl.querySelectorAll("a");
+//Attach a delegated 'click' event listener to topMenuEl.
+//The first line of code of the event listener function should 
+//call object's preventDefault() method.
+topMenuEl.addEventListener('click', function(event) {
+  event.preventDefault();// call preventDefautl method
+//The second line of code of the function should immediately 
+//return if the element clicked was not an <a> element.
+if(!event.target.matches("a")) {
+  return;
+}
+
+console.log(topMenuLinks);
+// add the active class to the <a> element that was clicked, unless 
+//it was already active, in which case it should remove it.
+// Remove 'active' class from other links
+topMenuLinks.forEach(link => {
+  if (link !== event.target) {
+    link.classList.remove('active');
+  }
+});
+
+// Toggle 'active' class on the clicked link
+event.target.classList.toggle('active');
+//Part 5: Adding Submenu Interaction
+// Logic for submenu interaction
+const linkObject = menuLinks.find(link => link.text === event.target.textContent);
+const subLinks = linkObject ? linkObject.subLinks : null;
+
+// Show or hide submenu based on the 'active' state
+if (event.target.classList.contains('active') && subLinks) {
+  subMenuEl.style.top = '100%';
+  buildSubmenu(subLinks);
+} else {
+  subMenuEl.style.top = '0';
+  subMenuEl.innerHTML = ''; // Clear current contents of subMenuEl
+}
+});
+
+function buildSubmenu(subLinks) {
+  subMenuEl.innerHTML = ''; // Clear current contents of subMenuEl
+// create a helper function called buildSubmenu
+  subLinks.forEach(link => {
+    const newLink = document.createElement('a');
+    newLink.setAttribute('href', link.href);
+    newLink.textContent = link.text;
+    subMenuEl.appendChild(newLink);
+  });
+}
+
 
